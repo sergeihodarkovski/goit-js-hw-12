@@ -126,10 +126,13 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  max-width: 1200px;
+  margin: 20px auto;
 }
 
 .gallery a {
-  width: calc(25% - 10px);
+  flex: 1 0 calc(20% - 10px);
+  box-sizing: border-box;
 }
 
 .gallery img {

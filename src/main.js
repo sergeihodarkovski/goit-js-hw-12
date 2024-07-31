@@ -13,6 +13,8 @@ const btnLoadMore = document.querySelector('.btn');
 
 let searchTerm = '';
 let currentPage = 1;
+let maxPage = 1;
+const perPage = 15;
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
@@ -33,6 +35,7 @@ form.addEventListener('submit', async event => {
   try {
     currentPage = 1;
     const images = await fetchImages(searchTerm, currentPage);
+    maxPage = data.totalHits / perPage;
 
     if (images.length === 0) {
       iziToast.info({
@@ -59,9 +62,11 @@ btnLoadMore.addEventListener('click', async () => {
   try {
     showLoadingIndicator();
     const images = await fetchImages(searchTerm, currentPage);
+
     if (images.length > 0) {
       renderGallery(images, true);
       initializeLightbox();
+      updateMaxPage();
     } else {
       iziToast.info({
         message: 'No more images found.',
@@ -95,4 +100,17 @@ function showLoadBtn() {
 }
 function hideLoadBtn() {
   btnLoadMore.classList.add('hidden');
+}
+
+function updateMaxPage(totalHits, perPage) {
+  maxPage = Math.ceil(totalHits / perPage);
+
+  if (currentPage >= maxPage) {
+    iziToast.info({
+      message: "We're sorry, but you've reached the end of search results.",
+    });
+    hideLoadBtn();
+  } else {
+    showLoadBtn();
+  }
 }
