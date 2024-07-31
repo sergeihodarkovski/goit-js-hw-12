@@ -35,7 +35,7 @@ form.addEventListener('submit', async event => {
   try {
     currentPage = 1;
     const images = await fetchImages(searchTerm, currentPage);
-    maxPage = data.totalHits / perPage;
+    maxPage = Math.ceil(data.totalHits / perPage);
 
     if (images.length === 0) {
       iziToast.info({
@@ -102,8 +102,8 @@ function hideLoadBtn() {
   btnLoadMore.classList.add('hidden');
 }
 
-function updateMaxPage(totalHits, perPage) {
-  maxPage = Math.ceil(totalHits / perPage);
+function updateMaxPage() {
+  maxPage = Math.ceil(data.totalHits / perPage);
 
   if (currentPage >= maxPage) {
     iziToast.info({

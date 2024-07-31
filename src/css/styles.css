@@ -126,7 +126,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 20px auto;
 }
 
@@ -139,4 +139,10 @@ body {
   width: 100%;
   height: auto;
   display: block;
+}
+
+.info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
