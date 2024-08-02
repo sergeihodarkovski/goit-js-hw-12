@@ -70,6 +70,7 @@ btnLoadMore.addEventListener('click', async () => {
     if (images.length > 0) {
       renderGallery(images, true);
       initializeLightbox();
+      scrollGallery();
       updateMaxPage(totalHits);
     } else {
       iziToast.info({
@@ -117,4 +118,19 @@ function showLoadBtn() {
 
 function hideLoadBtn() {
   btnLoadMore.classList.add('hidden');
+}
+
+function scrollGallery() {
+  const firstNewImage = gallery.querySelector('.photo-card:not(.old)');
+
+  if (firstNewImage) {
+    const elementHeight = firstNewImage.getBoundingClientRect().height;
+    const scrollHeight = elementHeight * 3;
+
+    scrollBy({ top: scrollHeight, behavior: 'smooth' });
+
+    gallery
+      .querySelectorAll('.photo-card')
+      .forEach(card => card.classList.add('old'));
+  }
 }
