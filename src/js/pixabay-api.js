@@ -23,15 +23,18 @@ export async function fetchImages(searchTerm, currentPage) {
 
     const data = response.data;
 
-    return data.hits.map(image => ({
-      webformatURL: image.webformatURL,
-      largeImageURL: image.largeImageURL,
-      tags: image.tags,
-      likes: image.likes,
-      views: image.views,
-      comments: image.comments,
-      downloads: image.downloads,
-    }));
+    return {
+      hits: data.hits.map(image => ({
+        webformatURL: image.webformatURL,
+        largeImageURL: image.largeImageURL,
+        tags: image.tags,
+        likes: image.likes,
+        views: image.views,
+        comments: image.comments,
+        downloads: image.downloads,
+      })),
+      totalHits: data.totalHits,
+    };
   } catch (error) {
     console.error('Error fetching images:', error);
     throw error;

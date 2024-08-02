@@ -28,14 +28,16 @@ form.addEventListener('submit', async event => {
     return;
   }
 
-  clearGallery(gallery);
+  clearGallery();
   showLoadingIndicator();
-  hideLoadBtn();
 
   try {
     currentPage = 1;
-    const images = await fetchImages(searchTerm, currentPage);
-    maxPage = Math.ceil(data.totalHits / perPage);
+    const { hits: images, totalHits } = await fetchImages(
+      searchTerm,
+      currentPage
+    );
+    updateMaxPage(totalHits);
 
     if (images.length === 0) {
       iziToast.info({
@@ -46,7 +48,6 @@ form.addEventListener('submit', async event => {
       renderGallery(images);
       initializeLightbox();
       searchInput.value = '';
-      showLoadBtn();
     }
   } catch (error) {
     console.error('Error loading images:', error);
@@ -61,17 +62,19 @@ btnLoadMore.addEventListener('click', async () => {
   currentPage++;
   try {
     showLoadingIndicator();
-    const images = await fetchImages(searchTerm, currentPage);
+    const { hits: images, totalHits } = await fetchImages(
+      searchTerm,
+      currentPage
+    );
 
     if (images.length > 0) {
       renderGallery(images, true);
       initializeLightbox();
-      updateMaxPage();
+      updateMaxPage(totalHits);
     } else {
       iziToast.info({
         message: 'No more images found.',
       });
-      hideLoadBtn();
     }
   } catch (error) {
     console.error('Error loading more images:', error);
@@ -95,15 +98,8 @@ function initializeLightbox() {
   lightbox.refresh();
 }
 
-function showLoadBtn() {
-  btnLoadMore.classList.remove('hidden');
-}
-function hideLoadBtn() {
-  btnLoadMore.classList.add('hidden');
-}
-
-function updateMaxPage() {
-  maxPage = Math.ceil(data.totalHits / perPage);
+function updateMaxPage(totalHits) {
+  maxPage = Math.ceil(totalHits / perPage);
 
   if (currentPage >= maxPage) {
     iziToast.info({
@@ -113,4 +109,12 @@ function updateMaxPage() {
   } else {
     showLoadBtn();
   }
+}
+
+function showLoadBtn() {
+  btnLoadMore.classList.remove('hidden');
+}
+
+function hideLoadBtn() {
+  btnLoadMore.classList.add('hidden');
 }
